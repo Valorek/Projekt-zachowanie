@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="grid text-center">
+        <div class="g-col-4">
+      <form  id="dane">
+        <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Przeliczanie punktów ujemne </h5>
+         <select class="form-select" id="a0" multiple aria-label="Multiple select example">
+        <option selected>Wybierz co przeskrobałeś</option>
+      
+      </select>
+        </div>
+      </div>
+         <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Przeliczanie punktów dodatnie </h5>
+         <select class="form-select" name="p0" multiple aria-label="Multiple select example">
+        <option selected>wybierz</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+        </div>
+      </div>
+      </form>
+                         </div>               
+      </div>
+      <input type="number" id="punktyZachowanie" placeholder="Podaj punkty z zachowania">
+<button type="button" onclick="przeliczPunkty()">Przelicz</button>
+      <div id="wypluwacz"></div>
+      <script src="script.js"></script>
+</body>
+</html>
