@@ -1,85 +1,55 @@
 url = "https://imiki.pl/dane.json";
+url1 = "https://imiki.pl/dane1.json";
 
-fetch(url)
-    .then(response => { return response.text();
-    })
-    .then(fileContent => {
-       dane(JSON.parse(fileContent));
-  
-    })
-    .catch(error => {
-        console.error('błąd json:', error);
-    });
-
-function dane(d){
-  f = document.getElementById("a0");
-  k = Object.keys(d).map(function(key) {
-    return { key: key, value: d[key] };
-  });
-  for(let i = 0; i <= Object.keys(d).length; i++) {
-   if(typeof(k[i].value.punkty) == "object") {
-    z = k[i].value.punkty.p0 + "-"+ k[i].value.punkty.p1;
-  } else {
-    z = k[i].value.punkty;
-  }
-  f.innerHTML +="<option value='p"+i+"'>"+ k[i].value.pozycja + " [" + z + "]</option>";
-  
-  }
-
+function Popieranie_danych(url, formId) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            dane(data, formId);
+        })
+        .catch(error => {
+            console.error('Błąd JSON:', error);
+        });
 }
 
+Popieranie_danych(url, "a0");
+Popieranie_danych(url1, "b0");
 
-function dane(d) {
-    f = document.getElementById("a0");
-    k = Object.keys(d).map(function(key) {
-      return { key: key, value: d[key] };
+function dane(d, formId) {
+    const selectElement = document.getElementById(formId);
+
+    Object.keys(d).forEach(key => {
+        const value = d[key];
+
+        let z;
+        if (typeof value.punkty === "object") {
+            z = `${value.punkty.p0}-${value.punkty.p1}`;
+        } else {
+            z = value.punkty;
+        }
+
+        // Utwórz nowy element "option"
+        const option = document.createElement("option");
+
+        // Ustaw atrybuty dla elementu "option"
+        option.value = `p${key}`;
+        option.textContent = `${value.pozycja} [${z}]`;
+
+        // Dodaj obsługę zdarzenia do elementu "option"
+        option.addEventListener("click", () => wywolaj(value));
+
+        // Dodaj element "option" do formularza
+        selectElement.appendChild(option);
     });
-    for (let i = 0; i < Object.keys(d).length; i++) {
-      if (typeof k[i].value.punkty == "object") {
-        z = k[i].value.punkty.p0 + "-" + k[i].value.punkty.p1;
-      } else {
-        z = k[i].value.punkty;
-      }
-      f.innerHTML +=
-        "<option value='p" + i + "'>" +
-        k[i].value.pozycja +
-        " [" +
-        z +
-        "]</option>";
-    }
-  }
-  
-  function przeliczPunkty() {
-    let punktyZachowanie = parseInt(document.getElementById("punktyZachowanie").value);
-    let selectedOptions = document.getElementById("a0").selectedOptions;
-    
-    if (selectedOptions.length > 0) {
-      let sumaPunktowZachowania = 0;
-  
-      // Iteruj po wybranych opcjach
-      for (let i = 0; i < selectedOptions.length; i++) {
-        // Pobierz indeks z opcji, na przykład "p0" -> 0
-        let index = parseInt(selectedOptions[i].value.substring(1));
-  
-        // Sprawdź, czy istnieje taki indeks w danych
-        if (index >= 0 && index < k.length) {
-          // Jeśli punkty to obiekt, zsumuj punkty z zachowania
-          let punktyZachowania = typeof k[index].value.punkty === "object" ? 
-            k[index].value.punkty.p0 + k[index].value.punkty.p1 :
-            k[index].value.punkty;
-  
-          // Dodaj punkty z zachowania do sumy
-          sumaPunktowZachowania += punktyZachowania;
-        } 
-      }
-  
-      // Odejmij sumę punktów z zachowania od wprowadzonych punktów
-      let wynik = punktyZachowanie - sumaPunktowZachowania;
-      w=document.getElementById("wypluwacz")
-      // Wyświetl wynik
-      w.innerHTML="Wynik przeliczenia: " + wynik;
+}
+
+function wywolaj(value) {
+    const wypluwacz = document.getElementById("wypluwacz");
+
+    // Ustawienie treści w elemencie "wypluwacz"
+    if (typeof value.punkty === "object") {
+        wypluwacz.textContent = `${value.punkty.p0}-${value.punkty.p1}`;
     } else {
-        w.innerHTML="Wybierz przynajmniej jedną opcję z listy";
+        wypluwacz.textContent = value.punkty;
     }
-  }
-  
+}
